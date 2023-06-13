@@ -5,11 +5,15 @@ export const TodoContext = createContext();
 
 const TodoContextProvider = (props) => {
   const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { authenticatedUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
+    if (!authenticatedUser) {
+            setLoading(false);
+            return;
+        }
       try {
         const requestOptions = {
           method: "GET",
@@ -70,7 +74,7 @@ const TodoContextProvider = (props) => {
   };
 
   if (loading) {
-    return <p>Loading...</p>; // Render a loading state until todos are fetched
+    return <p>Loadingsdasdasd...</p>; // Render a loading state until todos are fetched
   }
 
   return (
