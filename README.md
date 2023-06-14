@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# React App With Authorization And Todo CRUD
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Project Architecture](./images/app.png)
 
-## Available Scripts
+## Code Structure
+
+### `src/components`
+
+- `Auth`
+  - `AuthContext` (Wraps the entire application)
+- `ConfigHandler`
+  - `useHandler`
+- `Header`
+  - `NavBar`
+  - `SignInLinks` (when user is signed in)
+  - `SignOutLinks`
+- `Todo`
+  - `Context` (Wraps only the home component where todos are needed)
+  - `List` (Gets a list of todos from DynamoDB for the logged-in user)
+  - `Add` (Adds a todo for the logged-in user)
+
+### `src` (Application Main Components)
+
+- `Home` (Wrapped with Todo)
+- `Confirmation` (User to confirm Cognito user status by OTP)
+- `SignIn` (Forwards request to AWS Cognito)
+- `SignUp` (Forwards request to AWS Cognito)
+- `SecondHome` (Unused component)
+- `App.js` (Main component for booting up the application, wrapped with AuthContext and React Routing)
+
+## AWS Services
+
+### API Gateway
+
+![API Gateway](./images/api-gateway-sample.png)
+
+To set up API Gateway:
+
+- Create an API resource (similar to the example above)
+- Attach your lambda function to it
+- Enable CORS
+- Optionally, if you are using an Alias for lambda functions, mention it in the integration request tab
+- Deploy the API in a new stage (e.g., staging or dev)
+
+### Lambda Function
+
+To set up Lambda function:
+
+- Zip the lambda-dynamodb contents
+- Go to the Lambda dashboard in the AWS console
+- Upload the zip folder
+- Optionally, you can use versioning/Aliases if needed
+- Attach an IAM Execution role with read/write access to CloudWatch and DynamoDB
+
+### DynamoDB
+
+To set up DynamoDB:
+
+- Create a table named "Todos" with default configurations
+
+### Cognito
+
+To set up Cognito:
+
+- Create a User Pool with default settings
+- Note down the User Pool ID and secret, which will be used in our application
+
+## Services Integration in React App
+
+Now that we have configured our AWS services needed for this project, we need to integrate them with our app.
+
+### Environment Variables
+
+For local development, you can create a `.env` file with the following variables:
+
+REACT_APP_USER_POOL_ID=YOUR_COGNITO_USER_POOL_ID
+REACT_APP_CLIENT_ID=YOUR_COGNITO_USER_POOL_SECRET
+REACT_APP_API_GATEWAY=YOUR_API_GATEWAY_RESOURCE_URL
+
+
+### Start Development Server
 
 In the project directory, you can run:
 
-### `npm start`
 
-Runs the app in the development mode.\
+This runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
